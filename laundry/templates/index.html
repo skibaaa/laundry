@@ -1,0 +1,42 @@
+{% extends "master.html" %}
+{% load filters %}
+{% block title %}
+Pralnia
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-md-3">
+        <ul class="nav nav-pills nav-stacked">
+            {% for washroom in washrooms %}
+            <li{% ifequal washroom.id active %} class="active"{% endifequal %}><a href="{% url 'index' washroom.id %}">{{ washroom.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-9">
+        <table class="table table-bordered">
+            <th>Data</th>
+            {% for hour in hours %}
+                <th>{{ hour }}</th>
+            {% endfor %}
+        {% for day in days %}
+        <tr>
+           <td>{{ day }}</td>
+            {% for hour in hours %}
+                <td>
+                    {% with key=day.day|pair:hour.id %}
+                        {% with schedule=schedules|get:key %}
+                            {% if schedule %}
+                                {{ schedule }}
+                            {% endif %}
+                        {% endwith %}
+                    {% endwith %}
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}
